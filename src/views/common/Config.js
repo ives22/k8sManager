@@ -2,7 +2,9 @@ const BASE_API_HOST = 'http://127.0.0.1:9091';
 // const BASE_API_HOST = 'http://192.168.102.101:9091';
 export default {
     //后端接口路径
-    loginAuth: BASE_API_HOST + '/api/login' ,
+    loginAuth: BASE_API_HOST + '/api/login',
+    //修改密码接口
+    changePWD: BASE_API_HOST + '/api/changepwd',
     // 集群列表
     k8sClusterList: BASE_API_HOST + '/api/k8s/clusters' ,
     // 集群事件

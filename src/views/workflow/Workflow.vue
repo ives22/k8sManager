@@ -390,7 +390,8 @@ export default {
             delWorkflowData: {
                 url: common.k8sWorkflowDel,
                 params: {
-                    id: ''
+                    id: '',
+                    cluster: '',
                 }
             },
         }
@@ -471,6 +472,7 @@ export default {
         },
         delWorkflow(e) {
             this.delWorkflowData.params.id = e.row.id
+            this.delWorkflowData.params.cluster = this.selectClusterValue
             httpClient.delete(this.delWorkflowData.url, {data: this.delWorkflowData.params}).then(res => {
                 this.getWorkflows()
                 this.$message.success({

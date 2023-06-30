@@ -668,6 +668,7 @@ export default {
         restartDeployment(e){
             this.restartDeploymentData.params.namespace = this.namespaceValue
             this.restartDeploymentData.params.deployment_name = e.row.metadata.name
+            this.restartDeploymentData.params.cluster = this.selectClusterValue
             httpClient.put(this.restartDeploymentData.url, this.restartDeploymentData.params).then(res => {
                 this.$message.success({
                     message: res.msg

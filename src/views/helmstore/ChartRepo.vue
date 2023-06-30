@@ -277,7 +277,7 @@ export default {
                     limit: 9,
                 },
             },
-            // 分页
+            // 分页  
             currentPage: 1,
             pagesize: 10,
             pageTotal: 0,
@@ -632,8 +632,8 @@ export default {
             })
         },
 
-         // 重置表单方法 
-         resetForm(formName) {
+        // 重置表单方法 
+        resetForm(formName) {
             this.$refs[formName].resetFields()
         },
 

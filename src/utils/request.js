@@ -49,12 +49,10 @@ httpClient.interceptors.response.use(
             }
             return Promise.reject(response.data)
         } else {
-            console.log('bbbbb====')
             return response.data
         }
     },
     err => {
-        console.log('request========')
         return Promise.reject(err)
     }
 )

@@ -115,7 +115,7 @@
                                 <template #dropdown>
                                     <el-dropdown-menu>
                                         <el-dropdown-item @click="logout()">退出</el-dropdown-item>
-                                        <el-dropdown-item >修改密码</el-dropdown-item>
+                                        <el-dropdown-item @click="updatePWD()">修改密码</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </template>
                             </el-dropdown>
@@ -140,6 +140,47 @@
                 <el-backtop target=".el-main"></el-backtop>
             </el-container>
         </el-container>
+
+        <!-- =================================修改密码============================= -->
+        <!-- 抽屉：创建Chart的表单 -->
+        <!-- v-model 值是bool，用于显示与隐藏 -->
+        <!-- direction 显示的位置 -->
+        <!-- before-close 关闭时触发，点击关闭或者点击空白都会触发 -->
+        <el-dialog v-model="updatePwdDialog"
+        width="25%"
+     
+        :before-close="handleClose">
+            <!-- 插槽，抽屉标题 -->
+            <template #header>
+                <h4>更改密码</h4>
+            </template>
+            <!-- 插槽，body, 填写表单属性 -->
+            <template #default>
+                <!-- flex布局,居中 -->
+                <el-row type="flex" justify="center">
+                    <el-col :span="20">
+                        <!-- ref绑定控件后，js中才能用this.$ref获取该控件 -->
+                        <!-- rules 定义form表单校验规则 -->
+                        <el-form ref="updatePasswordData" :rules="updatePwdRules" :model="updatePasswordData" label-width="100px">
+                            <el-form-item  label="原密码" prop="oldPassword">
+                                <el-input v-model="updatePasswordData.oldPassword"></el-input>
+                            </el-form-item>
+                            <el-form-item  label="新密码" prop="newPassword">
+                                <el-input v-model="updatePasswordData.newPassword" show-password></el-input>
+                            </el-form-item>
+                            <el-form-item  label="确认新密码" prop="ackNewPassword">
+                                <el-input v-model="updatePasswordData.ackNewPassword" show-password></el-input>
+                            </el-form-item>
+                        </el-form>
+                    </el-col>
+                </el-row>
+            </template> 
+            <!-- footer，处理提交和取消 -->
+            <template #footer>
+                <el-button @click="updatePwdDialog = false">取消</el-button>
+                <el-button type="primary" @click="submitForm('updatePasswordData')">立即创建</el-button>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
@@ -171,6 +212,37 @@ export default {
             },
             appLoading: false,
 
+             // 修改密码相关
+            updatePwdDialog: false, // 修改密码时候的Dialog窗口开关
+            // 页面渲染相关数据
+            updatePasswordData: {
+                oldPassword: '',
+                newPassword: '',
+                ackNewPassword: '',
+            },
+            // 请求后端接口参数 url等。
+            updatePwdData: {
+                url: common.changePWD,
+                params: {
+                    username: "",
+                    old_pwd: "",
+                    new_pwd: ""
+                },
+            },
+            // 修改密码相关校验规则
+            updatePwdRules: {
+                oldPassword: [
+                    {required: true, message: '请填写原密码', trigger: 'change'}
+                ],
+                newPassword: [
+                    {required: true, message: '请填写新密码', trigger: 'change'},
+                    { min: 6, message: '新密码至少为6位', trigger: 'blur' }
+                ],
+                ackNewPassword: [
+                    {required: true,message: '请确认新密码',trigger: 'change'},
+                    { validator: this.validateConfirmPassword, trigger: 'blur' }
+                ],
+            }
         }
     },
     computed: {
@@ -226,6 +298,62 @@ export default {
             })
             this.appLoading = false
         },
+
+        // 修改密码
+        updatePWD(){
+            // 当点击修改密码时候，设置dialog窗口为true，弹出修改框
+            this.updatePwdDialog = true
+        },
+        // 修改密码，提交表单，校验参数合法性
+        submitForm(formName){
+            this.$refs[formName].validate((valid)=>{
+                if (valid) {
+                    this.updatePwdFunc()
+                } else {
+                    false
+                }
+            })
+        },
+        // 用于校验确认密码是否与新密码一致
+        validateConfirmPassword(rule, value, callback) {
+            if (value !== this.updatePasswordData.newPassword) {
+                callback(new Error('确认新密码与新密码不一致'));
+            } else {
+                callback();
+            }
+        },
+        // 处理抽屉的关闭，doble check，增加体验
+        handleClose(done){
+            this.$confirm('确认关闭？').then(()=>{
+                done();
+            }).catch(()=>{})
+        },
+        // 调用后端接口，修改密码
+        updatePwdFunc(){
+            console.log(this.updatePwdData)
+            this.updatePwdData.params.username = localStorage.getItem('username');
+            this.updatePwdData.params.old_pwd = this.updatePasswordData.oldPassword
+            this.updatePwdData.params.new_pwd = this.updatePasswordData.newPassword
+            httpClient.put(this.updatePwdData.url, this.updatePwdData.params).then(res => {
+                this.$message.success({
+                    message: res.msg
+                })
+                // 修改完成后，关闭弹窗，以及清空数据
+                // 重置表单
+                this.resetForm('updatePasswordData')
+                // 关闭抽屉
+                this.updatePwdDialog = false
+            }).catch(res => {
+                this.$message.error({
+                    message: res.msg
+                })
+            })
+        },
+         // 重置表单方法 
+         resetForm(formName) {
+            this.$refs[formName].resetFields()
+        },
+        
     },
     beforeMount() {
         //使用useRouter().options.routes方法获取路由规则

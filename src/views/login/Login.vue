@@ -53,7 +53,8 @@ export default{
                     message: '请填写密码',
                     trigger: 'change'
                 }],
-            }
+            },
+
         }
     },
     methods: {
@@ -78,7 +79,8 @@ export default{
                 message: res.msg
                 })
             })
-        }
+        },
+        
     }
 }
 </script>
@@ -89,7 +91,8 @@ export default{
         width: 100%;
         height: 100%;
         background: aquamarine;
-        background-image: url(../../assets/img/login3.webp);
+        /* background-image: url(../../assets/img/login3.webp); */
+        background-image: url(../../assets/img/login_bj.jpeg);
         background-size: 100%;
     }
     .login-card {
