@@ -15,6 +15,7 @@
                                     icon="Edit" 
                                     type="primary"
                                     v-loading.fullscreen.lock="fullscreenLoading"
+                                    disabled
                                     @click="createPersistentVolumeDrawer = true">创建</el-button>
                                 </div>
                             </el-col>

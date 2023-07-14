@@ -64,8 +64,6 @@ export default{
                 //账号密码校验成功后的一系列操作
                 localStorage.setItem('username', this.loginData.username);
                 localStorage.setItem('loginDate', moment().format('YYYY-MM-DD HH:mm:ss'));
-                // 前端生成token
-                // let token = jwt.sign(this.loginData, 'adoodevops', { expiresIn: '10h' });
                 // 获取后端返回的token
                 let token = res.data.token
                 localStorage.setItem('token', token);

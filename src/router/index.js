@@ -270,6 +270,7 @@ router.beforeEach((to, from, next) => {
 })
 
 
+
 // 关闭进度条
 router.afterEach((to, from, next) => {
     NProgress.done()

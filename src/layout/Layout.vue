@@ -12,7 +12,7 @@
                         <el-image class="logo-image" :src="logo" />
                         <!-- 平台名，折叠后不显示 -->
                         <span :class="[isCollapse ? 'is-collapse' : '']">
-                            <span class="logo-name">Kubernetes</span>
+                            <span class="logo-name">K8S-MGR</span>
                         </span>
                       
                     </div>
@@ -178,7 +178,7 @@
             <!-- footer，处理提交和取消 -->
             <template #footer>
                 <el-button @click="updatePwdDialog = false">取消</el-button>
-                <el-button type="primary" @click="submitForm('updatePasswordData')">立即创建</el-button>
+                <el-button type="primary" @click="submitForm('updatePasswordData')">确定</el-button>
             </template>
         </el-dialog>
     </div>

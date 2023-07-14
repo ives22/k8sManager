@@ -14,6 +14,7 @@
                                     <el-button style="border-radius:2px;" 
                                     icon="Edit" 
                                     type="primary"
+                                    disabled
                                     v-loading.fullscreen.lock="fullscreenLoading"
                                     @click="createNodeDrawer = true">创建</el-button>
                                 </div>
@@ -89,7 +90,7 @@
                             <el-table-column align=center label="操作" width="400">
                                 <template v-slot="scope">
                                     <el-button size="small" style="border-radius:2px;" icon="Edit" type="primary" plain @click="getNodeDetail(scope)">YAML</el-button>
-                                    <el-button size="small" style="border-radius:2px;" icon="Delete" type="danger" @click="handleConfirm(scope, '删除', delNode)">删除</el-button>
+                                    <el-button size="small" disabled style="border-radius:2px;" icon="Delete" type="danger" @click="handleConfirm(scope, '删除', delNode)">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>

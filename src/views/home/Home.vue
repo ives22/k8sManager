@@ -10,7 +10,7 @@
                         <el-card class="home-node-card" :body-style="{padding:'10px'}">
                             <div>
                                 <p class="home-node-card-title" style="font-size: 13px;">名称</p>
-                                <p class="home-node-card-num" style="text-align: center;font-size:30px;font-weight:bold; margin:0">K8S-OPS</p>
+                                <p class="home-node-card-num" style="text-align: center;font-size:30px;font-weight:bold; margin:0">K8S-MGR</p>
                             </div>
                         </el-card>
                     </el-col>
@@ -52,6 +52,41 @@
                             </el-card>
                         </el-col>
                     </template>
+                </el-row>
+            </el-collapse-item>
+
+             <!-- 面板3 资源统计画图 -->
+             <el-collapse-item title="资源统计" name="3">
+                <el-row :gutter="10">
+                    <!-- 每个namspace中pod数量的作图统计 -->
+                    <el-col :span="12" style="margin-bottom: 10px;">
+                        <el-card class="home-dash-card" :body-style="{padding:'10px'}">
+                            <!-- 这个div就是画图的内容，echarts初始化后会绑定到这个id上展示出来 -->
+                            <div id="podNumDash" style="height: 300px;">
+                            </div>
+                        </el-card>
+                    </el-col>
+                    <!-- 每个namespace中deployment数量的作图统计 -->
+                    <el-col :span="12">
+                        <el-card class="home-dash-card" :body-style="{padding:'10px'}">
+                            <div id="deployNumDash" style="height: 300px;">
+                            </div>
+                        </el-card>
+                    </el-col>
+                    <!-- 每个namespace中deployment数量的作图统计 -->
+                    <el-col :span="12">
+                        <el-card class="home-dash-card" :body-style="{padding:'10px'}">
+                            <div id="daemonsetNumDash" style="height: 300px;">
+                            </div>
+                        </el-card>
+                    </el-col>
+                    <!-- 每个namespace中deployment数量的作图统计 -->
+                    <el-col :span="12">
+                        <el-card class="home-dash-card" :body-style="{padding:'10px'}">
+                            <div id="statefulsetNumDash" style="height: 300px;">
+                            </div>
+                        </el-card>
+                    </el-col>
                 </el-row>
             </el-collapse-item>
 
@@ -157,40 +192,7 @@
                 
             </el-collapse-item>
 
-            <!-- 面板3 资源统计画图 -->
-            <el-collapse-item title="资源统计" name="3">
-                <el-row :gutter="10">
-                    <!-- 每个namspace中pod数量的作图统计 -->
-                    <el-col :span="12" style="margin-bottom: 10px;">
-                        <el-card class="home-dash-card" :body-style="{padding:'10px'}">
-                            <!-- 这个div就是画图的内容，echarts初始化后会绑定到这个id上展示出来 -->
-                            <div id="podNumDash" style="height: 300px;">
-                            </div>
-                        </el-card>
-                    </el-col>
-                    <!-- 每个namespace中deployment数量的作图统计 -->
-                    <el-col :span="12">
-                        <el-card class="home-dash-card" :body-style="{padding:'10px'}">
-                            <div id="deployNumDash" style="height: 300px;">
-                            </div>
-                        </el-card>
-                    </el-col>
-                    <!-- 每个namespace中deployment数量的作图统计 -->
-                    <el-col :span="12">
-                        <el-card class="home-dash-card" :body-style="{padding:'10px'}">
-                            <div id="daemonsetNumDash" style="height: 300px;">
-                            </div>
-                        </el-card>
-                    </el-col>
-                    <!-- 每个namespace中deployment数量的作图统计 -->
-                    <el-col :span="12">
-                        <el-card class="home-dash-card" :body-style="{padding:'10px'}">
-                            <div id="statefulsetNumDash" style="height: 300px;">
-                            </div>
-                        </el-card>
-                    </el-col>
-                </el-row>
-            </el-collapse-item>
+           
         </el-collapse>
     </div>
 </template>
@@ -272,6 +274,14 @@ export default {
             pagesizeList: [10, 20, 30],
             timer: null,  // 计时器
 
+
+            // 获取节点Pod信息增长率
+            getAllPodInfos: {
+                url: common.k8sPodInfoAll,
+                params: {
+                    cluster: ''
+                }
+            },
 
             // 获取节点资源
             getNodesData: {
@@ -380,6 +390,22 @@ export default {
             //四舍五入保留小数点0位，也就是去除小数点
             return a.toFixed(0)
         },
+
+        // 获取集群的Pod信息增长率
+        getClusterAllPodInfos(){
+            this.getAllPodInfos.params.cluster = this.selectClusterValue
+            httpClient.get(this.getAllPodInfos.url, {params: this.getAllPodInfos.params}).then(res => {
+                // this.podNumNp = res.data
+                // //echarts作图
+                // this.getPodNumDash()
+            }).catch(res => {
+                this.$message.error({
+                    message: res.msg
+                })
+            })
+            
+        },
+
         //获取每个namespace中pod的数量
         getPodNumNp() {
             this.getNumNpData.params.cluster = this.selectClusterValue
@@ -685,6 +711,7 @@ export default {
                 this.getDaemonSetNumNp()
                 this.getStatefulSetNumNp()
                 this.getClusterResources()
+                // this.getClusterAllPodInfos()
                 //当集群发生改变时，首先关闭之前的定时器
                 clearInterval(this.timer)
                 // 重新获取对应集群的事件信息，并开启定时任务
@@ -723,6 +750,7 @@ export default {
         this.getDeploymentNumNp()
         this.getDaemonSetNumNp()
         this.getStatefulSetNumNp()
+        // this.getClusterAllPodInfos()
     },
     beforeUnmount(){
         // 离开当前页面时候，销毁定时器

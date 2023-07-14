@@ -33,6 +33,7 @@ export default {
     k8sPodContainer: BASE_API_HOST + '/api/k8s/pod/container' ,
     k8sPodLog: BASE_API_HOST + '/api/k8s/pod/log' ,
     k8sPodNumNp: BASE_API_HOST + '/api/k8s/pod/numnp' ,
+    k8sPodInfoAll: BASE_API_HOST + '/api/k8s/pod/all', // 获取集群所有的Pod信息
 
     k8sDaemonSetList: BASE_API_HOST + '/api/k8s/daemonSets' ,
     k8sDaemonSetDetail: BASE_API_HOST + '/api/k8s/daemonSet/detail' ,

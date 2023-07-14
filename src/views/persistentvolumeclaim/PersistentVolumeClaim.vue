@@ -47,6 +47,7 @@
                                     <el-button style="border-radius:2px;" 
                                     icon="Edit" 
                                     type="primary"
+                                    disabled
                                     v-loading.fullscreen.lock="fullscreenLoading"
                                     @click="createPvcDrawer = true">创建</el-button>
                                 </div>
